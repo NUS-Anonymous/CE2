@@ -230,6 +230,8 @@ public class TextBuddy {
 			showToUser(String.format(MESSAGE_ERROR_DELETING, fileName));
 		}
 	}
+	public static void sort(String fileName){
+	}
 	
 
 
