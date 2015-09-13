@@ -1,0 +1,22 @@
+Welcome to TextBuddy mytextfile.txt is ready for use
+command: added to mytextfile.txt : " mytextfile.txt " 
+command: 
+1. little brown fox
+command: 
+added to mytextfile.txt : " mytextfile.txt " 
+command: 
+1. little brown fox
+2. jumped over the moon
+command: 
+deleted mytextfile.txt : " jumped over the moon"
+command: 
+1. little brown fox
+command: 
+added to mytextfile.txt : " mytextfile.txt " 
+command: 
+1. little brown fox
+3. this is going to be the secondline
+command: 
+command: 
+mytextfile.txt is empty!
+command: 
