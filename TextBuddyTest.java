@@ -5,8 +5,8 @@ public class TextBuddyTest {
 
 	@Test
 	public void testSortCommand(){
-		testOneCommand("simple before sort", "null", "text.txt");
-		
+		TextBuddy.executeCommand("text.txt", "add d");
+		testOneCommand("fail file","fail","new.txt");
 	}
 	
 	private void testOneCommand(String description, String expected, String command) {
