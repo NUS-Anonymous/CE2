@@ -189,23 +189,22 @@ public class TextBuddy {
 	 * This method display the content of the file If the file is empty, it will
 	 * display empty message instead
 	 */
-	public static String display(String fileName) {
-		String line = null;
+	public static void display(String fileName) {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
-			
+			String line = null;
+
 			if ((line = reader.readLine()) == null) {
 				showToUser(String.format(MESSAGE_EMPTY, fileName));
 			} else {
 				do {
-					return (line);
+					showToUser(line);
 				} while ((line = reader.readLine()) != null);
 			}
 			reader.close();
 		} catch (IOException ex) {
 			showToUser(String.format(MESSAGE_ERROR_READING, fileName));
 		}
-		return line;
 	}
 
 	/*
