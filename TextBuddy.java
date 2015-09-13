@@ -95,7 +95,7 @@ public class TextBuddy {
 	 * onto the given file
 	 * Each of the command keyword would then be passed to different method to execute.
 	 */
-	private static void executeCommand(String fileName, String command) throws Error {
+	public static void executeCommand(String fileName, String command) throws Error {
 		try {
 			FileWriter fileWriter = new FileWriter(fileName);
 			BufferedWriter writer = new BufferedWriter(fileWriter);
@@ -230,8 +230,8 @@ public class TextBuddy {
 			showToUser(String.format(MESSAGE_ERROR_DELETING, fileName));
 		}
 	}
-	public static void sort(String fileName){
-		
+	public static String sort(String fileName){
+		return null;
 	}
 	
 
