@@ -47,14 +47,14 @@ public class TextBuddy {
 	enum COMMAND_TYPE {
 		ADD, DISPLAY, DELETE, CLEAR, SORT,INVALID, EXIT, 
 	};
-
+	private static Scanner sc = new Scanner(System.in);
+	
 	public static void main(String[] args) {
 		//String fileName = getFileName(args);
 		String fileName = "text.txt";
 		welcomeUser(fileName);
-		Scanner sc = new Scanner(System.in);
 		String command = sc.next();
-		executeCommand(fileName,sc,command);
+		executeCommand(fileName,command);
 	}
 	
 	/* This method display the welcome message to the user 
@@ -95,11 +95,11 @@ public class TextBuddy {
 	 * onto the given file
 	 * Each of the command keyword would then be passed to different method to execute.
 	 */
-	private static void executeCommand(String fileName,Scanner sc, String command) throws Error {
+	private static void executeCommand(String fileName, String command) throws Error {
 		try {
 			FileWriter fileWriter = new FileWriter(fileName);
 			BufferedWriter writer = new BufferedWriter(fileWriter);
-			performFunction(writer,command,sc,fileName);
+			performFunction(writer,command,fileName);
 		}
 		catch (IOException ex) {
 			showToUser(String.format(MESSAGE_ERROR_ADDING, fileName));
@@ -125,13 +125,13 @@ public class TextBuddy {
 		return file;
 	}
 	
-	public static void performFunction(BufferedWriter writer, String command, Scanner sc, String fileName) throws IOException {
+	public static void performFunction(BufferedWriter writer, String command, String fileName) throws IOException {
 		int count=0;
 		while (true) {
 			COMMAND_TYPE commandType = determineCommandType(command);
 			switch (commandType) {
 			case ADD:
-				count = add(fileName, writer, count, sc);
+				count = add(fileName, writer, count);
 				break;
 			case DISPLAY:
 				display(fileName);
@@ -167,7 +167,7 @@ public class TextBuddy {
 	* Precondition: The input is in form [add] [content]
 	* Post-con: return the order of the new line add to (or line number)
 	*/
-	public static int add(String fileName, BufferedWriter writer, int count, Scanner sc) {
+	public static int add(String fileName, BufferedWriter writer, int count) {
 		count++;
 		String line = sc.nextLine();
 		try {
@@ -231,6 +231,7 @@ public class TextBuddy {
 		}
 	}
 	public static void sort(String fileName){
+		
 	}
 	
 
