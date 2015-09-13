@@ -9,10 +9,12 @@ public class TextBuddyTest {
 		testOneCommand("fail file","fail","new.txt");
 		
 		testOneCommand("successful test","successful","text.txt");
+		TextBuddy.executeCommand("text.txt","add d");
+		testOneCommand("1 line","1. d","text.txt");
 		
 	}
 	
 	private void testOneCommand(String description, String expected, String command) {
-		assertEquals(description, expected,TextBuddy.sort(command)); 
+		assertEquals(description, expected,TextBuddy.display(command)); 
 	}
 }
