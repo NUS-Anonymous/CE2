@@ -40,10 +40,12 @@ public class TextBuddy {
 	private static final String MESSAGE_ERROR_CLEARING = "Error clearing file %1$s !";
 	private static final String MESSAGE_ERROR_READING = "Error reading file %1$s !";
 	private static final String MESSAGE_ERROR_SORTING = "Error sorting file %1$s !";
+	
+	private static final int LIMIT_LINE = 20;
 
 	// These are the possible command types
 	enum COMMAND_TYPE {
-		ADD, DISPLAY, DELETE, CLEAR, SORT, INVALID, EXIT,
+		ADD, DISPLAY, DELETE, CLEAR, SORT, SEARCH, INVALID, EXIT,
 	};
 
 	private static Scanner sc = new Scanner(System.in);
@@ -88,6 +90,8 @@ public class TextBuddy {
 			return COMMAND_TYPE.EXIT;
 		} else if (command.equalsIgnoreCase("sort")) {
 			return COMMAND_TYPE.SORT;
+		} else if (command.equalsIgnoreCase("search")){
+			return COMMAND_TYPE.SEARCH;
 		} else {
 			return COMMAND_TYPE.INVALID;
 		}
@@ -152,6 +156,9 @@ public class TextBuddy {
 				sort(fileName);
 				writer = new BufferedWriter(new FileWriter(fileName, true));
 				break;
+			case SEARCH:
+				showToUser(search(fileName, sc.next().trim()));
+				break;
 			case INVALID:
 				showToUser(MESSAGE_INVALID);
 				break;
@@ -164,6 +171,13 @@ public class TextBuddy {
 			showToUser(MESSAGE_COMMAND);
 			command = sc.next();
 		}
+	}
+
+	public static String search(String fileName, String trim) {
+		String line = "";
+		
+		
+		return line;
 	}
 
 	/*
@@ -235,12 +249,15 @@ public class TextBuddy {
 			showToUser(String.format(MESSAGE_ERROR_DELETING, fileName));
 		}
 	}
-
+	
+	/* The sort method would arrange lines in alphabetical order. however, there is
+	* limitation of maximum 20 lines of text in the file.
+	*/
 	public static String sort(String fileName) {
 		File inputFile = new File(fileName);
 		File tempOutPut = new File("new" + fileName);
-		String[] array = new String[20];
-		for (int i = 0; i < 20; i++) {
+		String[] array = new String[LIMIT_LINE];
+		for (int i = 0; i < LIMIT_LINE; i++) {
 			array[i] = "{";
 		}
 
