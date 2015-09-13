@@ -247,6 +247,20 @@ public class TextBuddy {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
 			BufferedWriter writer = new BufferedWriter(new FileWriter(tempOutPut));
+			String currentLine;
+			int count = 0;
+			while ((currentLine = reader.readLine()) != null) {
+				array[count++]= currentLine.substring(3);
+				}
+			Arrays.sort(array);
+			for(int i = 0; i< count; i++){
+				int n = i+1;
+				writer.write(""+ n+". " + array[i]);
+				writer.newLine();
+			}
+			writer.close();
+			reader.close();
+			tempOutPut.renameTo(inputFile);
 		} catch (IOException e) {
 			showToUser(String.format(MESSAGE_ERROR_SORTING, fileName));
 			return "fail";
