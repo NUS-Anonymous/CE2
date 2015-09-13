@@ -7,7 +7,9 @@ public class TextBuddyTest {
 	public void testSortCommand(){
 		TextBuddy.executeCommand("text.txt", "add d");
 		testOneCommand("fail file","fail","new.txt");
+		
 		testOneCommand("successful test","successful","text.txt");
+		
 	}
 	
 	private void testOneCommand(String description, String expected, String command) {
