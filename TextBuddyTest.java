@@ -43,4 +43,15 @@ public class TextBuddyTest {
 		assertEquals("after sorting", "1.aaaa"
 				+ "2.bbbb" + "3.dddd", TextBuddy.unitTest(fileName));
 	}
+	@Test
+	public void testSearch() throws IOException {
+		TextBuddy test = new TextBuddy();
+		String fileName = "text.txt";
+		TextBuddy.executeCommand(fileName, "clear");
+		TextBuddy.executeCommand(fileName, "add aaaa");
+		TextBuddy.executeCommand(fileName, "add dddd");
+		TextBuddy.executeCommand(fileName, "add bbbb");
+		assertEquals("after search without anything","",TextBuddy.search(fileName, "search"));
+	}
+	
 }
