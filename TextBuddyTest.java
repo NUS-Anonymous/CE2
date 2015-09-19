@@ -31,13 +31,16 @@ public class TextBuddyTest {
 		assertEquals("add firstline", "1.firstline"
 				+ "2.secondline", TextBuddy.unitTest(fileName));
 	}
+	@Test
 	public void testSort() throws IOException {
 		TextBuddy test = new TextBuddy();
 		String fileName = "text.txt";
 		TextBuddy.executeCommand(fileName, "clear");
-		TextBuddy.executeCommand(fileName, "add firstline");// add firstline
-		TextBuddy.executeCommand(fileName, "add secondline");
-		assertEquals("No sorting, hence pass test", "1.firstline"
-				+ "2.secondline", TextBuddy.unitTest(fileName));
+		TextBuddy.executeCommand(fileName, "add aaaa");// add firstline
+		TextBuddy.executeCommand(fileName, "add dddd");
+		TextBuddy.executeCommand(fileName, "add bbbb");
+		TextBuddy.executeCommand(fileName, "sort");
+		assertEquals("after sorting", "1.aaaa"
+				+ "2.bbbb" + "3.dddd", TextBuddy.unitTest(fileName));
 	}
 }
