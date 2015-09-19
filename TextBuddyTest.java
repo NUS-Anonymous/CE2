@@ -52,7 +52,7 @@ public class TextBuddyTest {
 		TextBuddy.executeCommand(fileName, "add aaaa");
 		TextBuddy.executeCommand(fileName, "add dddd");
 		TextBuddy.executeCommand(fileName, "add bbbb");
-		assertEquals("after search without anything","",TextBuddy.search(fileName, "search"));
+		assertEquals("after search without anything","1.aaaa",TextBuddy.search(fileName, "aa"));
 	}
 	
 }
