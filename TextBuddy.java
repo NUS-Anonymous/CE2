@@ -90,8 +90,7 @@ public class TextBuddy {
 	public static void executeCommand(String fileName, String command) throws Error, IOException {
 		
 		try {
-			fileWriter = new FileWriter(fileName);
-			writer = new BufferedWriter(fileWriter);
+			writer = new BufferedWriter(new FileWriter(fileName, true));
 			performFunction(command, fileName);
 		} catch (IOException ex) {
 			showToUser(String.format(MESSAGE_ERROR_ADDING, fileName));

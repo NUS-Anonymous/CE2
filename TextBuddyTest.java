@@ -21,4 +21,15 @@ public class TextBuddyTest {
 		TextBuddy.executeCommand(fileName, "add firstline");// add firstline
 		assertEquals("add firstline", "1.firstline", TextBuddy.unitTest(fileName));
 	}
+	@Test
+	public void testTwoLine() throws IOException {
+		TextBuddy test = new TextBuddy();
+		String fileName = "text.txt";
+		TextBuddy.executeCommand(fileName, "clear");
+		TextBuddy.executeCommand(fileName, "add firstline");// add firstline
+		TextBuddy.executeCommand(fileName, "add secondline");
+		assertEquals("add firstline", "1.firstline"
+				+ "2.secondline", TextBuddy.unitTest(fileName));
+	}
+	
 }
