@@ -18,6 +18,7 @@ public class TextBuddyTest {
 	public void testOneLine() throws IOException {
 		TextBuddy test = new TextBuddy();
 		String fileName = "text.txt";
+		TextBuddy.executeCommand(fileName, "clear");
 		TextBuddy.executeCommand(fileName, "add firstline");// add firstline
 		assertEquals("add firstline", "1.firstline", TextBuddy.unitTest(fileName));
 	}

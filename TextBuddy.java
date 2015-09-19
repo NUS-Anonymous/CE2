@@ -228,8 +228,21 @@ public class TextBuddy {
 	}
 	
 	public static String search(String fileName, String trimLine) {
-		return "";
+		File inputFile = new File(fileName);
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+			String currentLine;
+			while ((currentLine = reader.readLine()) != null) {
+				if (currentLine.toLowerCase().contains(trimLine.toLowerCase()))
+					return currentLine;
+			}
+			reader.close();
+		} catch (IOException e) {
+			showToUser(String.format(MESSAGE_ERROR_SORTING, fileName));
+		}	
+		return MESSAGE_NOTFOUND;
 	}
+
 	
 	
 
