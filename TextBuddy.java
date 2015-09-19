@@ -88,7 +88,14 @@ public class TextBuddy {
 	 * different method to execute.
 	 */
 	public static void executeCommand(String fileName, String command) throws Error, IOException {
-		performFunction(command, fileName);
+		
+		try {
+			fileWriter = new FileWriter(fileName);
+			writer = new BufferedWriter(fileWriter);
+			performFunction(command, fileName);
+		} catch (IOException ex) {
+			showToUser(String.format(MESSAGE_ERROR_ADDING, fileName));
+		}
 	}
 	
 	private static String removeFirstWord(String userCommand) {
