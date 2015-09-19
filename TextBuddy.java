@@ -194,27 +194,18 @@ public class TextBuddy {
 			file = file + args[i].toString();
 		return file;
 	}
-
-	
-	
-	/*Search a word or a line in the file, if contain then return the line
-	* else return "not found";
+	/* The sort method would arrange lines in alphabetical order. however, there is
+	* limitation of maximum 20 lines of text in the file.
 	*/
-	public static String search(String fileName, String trimLine) {
-		File inputFile = new File(fileName);
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-			String currentLine;
-			while ((currentLine = reader.readLine()) != null) {
-				if (currentLine.toLowerCase().contains(trimLine.toLowerCase()))
-					return currentLine;
-			}
-			reader.close();
-		} catch (IOException e) {
-			showToUser(String.format(MESSAGE_ERROR_SORTING, fileName));
-		}	
-		return MESSAGE_NOTFOUND;
+	public static void sort(String fileName) {
+		
 	}
+	
+	public static String search(String fileName, String trimLine) {
+		return "";
+	}
+	
+	
 
 	/*
 	 * This method is to add new line to txt file Precondition: The input is in
@@ -307,41 +298,7 @@ public class TextBuddy {
 		return deletedLine;
 	}
 	
-	/* The sort method would arrange lines in alphabetical order. however, there is
-	* limitation of maximum 20 lines of text in the file.
-	*/
-	public static String sort(String fileName) {
-		File inputFile = new File(fileName);
-		File tempOutPut = new File("new" + fileName);
-		String[] array = new String[LIMIT_LINE];
-		for (int i = 0; i < LIMIT_LINE; i++) {
-			array[i] = "{";
-		}
 
-		try {
-			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-			BufferedWriter writer = new BufferedWriter(new FileWriter(tempOutPut));
-			String currentLine;
-			int count = 0;
-			while ((currentLine = reader.readLine()) != null) {
-				array[count++]= currentLine.substring(3);
-				}
-			Arrays.sort(array);
-			for(int i = 0; i< count; i++){
-				int n = i+1;
-				writer.write(""+ n+". " + array[i]);
-				writer.newLine();
-			}
-			writer.close();
-			reader.close();
-			tempOutPut.renameTo(inputFile);
-		} catch (IOException e) {
-			showToUser(String.format(MESSAGE_ERROR_SORTING, fileName));
-			return "fail";
-		}
-		return "successful";
-	}
-	
 
 	/*
 	 * This method is to clear all content in the .txt file Pre-con: The file
