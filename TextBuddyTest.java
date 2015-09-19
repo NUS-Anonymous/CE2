@@ -1,20 +1,24 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+
 import org.junit.Test;
 
 public class TextBuddyTest {
-
 	@Test
-	public void testSearchCommand(){
-		TextBuddy.executeCommand("text.txt", "add this is the firstline");
-		TextBuddy.executeCommand("text.txt", "add this is the Secondline");
-		TextBuddy.executeCommand("text.txt", "add this is the Thirdine");
-		TextBuddy.executeCommand("text.txt", "add this is the Fourthline");
-		// null fail case
-		testOneCommand("fail method","","firstline");
+	public void testUnitTest() throws IOException{
+		TextBuddy test = new TextBuddy();
+		String fileName = "text.txt";
+		TextBuddy.executeCommand(fileName, "clear");
+		assertEquals("clear","", TextBuddy.unitTest(fileName));
+	}
+	@Test
+	public void testOneLine() throws IOException {
+		TextBuddy test = new TextBuddy();
+		String fileName = "text.txt";
+		TextBuddy.executeCommand(fileName, "delete 1");
+		assertEquals("clear", "", TextBuddy.unitTest(fileName));
 		
 	}
 	
-	private void testOneCommand(String description, String expected, String command) {
-		assertEquals(description, expected,TextBuddy.search("text.txt",command)); 
-	}
 }

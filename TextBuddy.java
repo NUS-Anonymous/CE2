@@ -26,10 +26,12 @@ public class TextBuddy {
 	private static final String MESSAGE_WELCOME = "Welcome to TextBuddy %1$s is ready for use";
 	private static final String MESSAGE_COMMAND = "command: ";
 	private static final String MESSAGE_INVALID = "INVALID command:";
+	private static final String MESSAGE_NOTFOUND = "Not Found";
+	
 
 	// These are used to indicate the action taken by the file.
 	private static final String MESSAGE_COMMAND_NULL = "Error reading file %1$s !";
-	private static final String MESSAGE_ADDING = "added to %1$s : \" %1$s \" ";
+	private static final String MESSAGE_ADDING = "added to %1$s : \" %2$s \" ";
 	private static final String MESSAGE_EMPTY = "%1$s is empty!";
 	private static final String MESSAGE_DELETE = "deleted %1$s : \" %2$s\"";
 
@@ -49,13 +51,27 @@ public class TextBuddy {
 	};
 
 	private static Scanner sc = new Scanner(System.in);
+	private static int count = 0;
+	private static FileWriter fileWriter;
+	private static BufferedWriter writer;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, Error {
 		// String fileName = getFileName(args);
 		String fileName = "text.txt";
 		welcomeUser(fileName);
-		String command = sc.next();
+		String command = sc.nextLine();
+		
+		try {
+			fileWriter = new FileWriter(fileName);
+			writer = new BufferedWriter(fileWriter);
+		} catch (IOException ex) {
+			showToUser(String.format(MESSAGE_ERROR_ADDING, fileName));
+		}
+		while (command!=""){
 		executeCommand(fileName, command);
+		showToUser(MESSAGE_COMMAND);
+		command = sc.nextLine();
+		}
 	}
 
 	/*
@@ -66,6 +82,23 @@ public class TextBuddy {
 		System.out.println(String.format(MESSAGE_WELCOME, fileName));
 		System.out.print(MESSAGE_COMMAND);
 	}
+	/*
+	 * This method execute respective command type based on the command keyword
+	 * onto the given file Each of the command keyword would then be passed to
+	 * different method to execute.
+	 */
+	public static void executeCommand(String fileName, String command) throws Error, IOException {
+		performFunction(command, fileName);
+	}
+	
+	private static String removeFirstWord(String userCommand) {
+		return userCommand.replace(getFirstWord(userCommand), "").trim();
+	}
+	
+	private static String getFirstWord(String userCommand) {
+		String commandTypeString = userCommand.trim().split("\\s+")[0];
+		return commandTypeString;
+	}
 
 	/*
 	 * This method determines which of the supported command types the user
@@ -73,11 +106,11 @@ public class TextBuddy {
 	 * 
 	 * @String command is the first word of the input
 	 */
-	private static COMMAND_TYPE determineCommandType(String command) {
+	private static COMMAND_TYPE determineCommandType(String userCommand) {
+		String command = getFirstWord(userCommand);
 		if (command == null) {
 			throw new Error(MESSAGE_COMMAND_NULL);
 		}
-
 		if (command.equalsIgnoreCase("add")) {
 			return COMMAND_TYPE.ADD;
 		} else if (command.equalsIgnoreCase("display")) {
@@ -91,26 +124,50 @@ public class TextBuddy {
 		} else if (command.equalsIgnoreCase("sort")) {
 			return COMMAND_TYPE.SORT;
 		} else if (command.equalsIgnoreCase("search")){
-			return COMMAND_TYPE.SEARCH;
+			return COMMAND_TYPE.SEARCH; 
 		} else {
 			return COMMAND_TYPE.INVALID;
 		}
 	}
-
-	/*
-	 * This method execute respective command type based on the command keyword
-	 * onto the given file Each of the command keyword would then be passed to
-	 * different method to execute.
-	 */
-	public static void executeCommand(String fileName, String command) throws Error {
-		try {
-			FileWriter fileWriter = new FileWriter(fileName);
-			BufferedWriter writer = new BufferedWriter(fileWriter);
-			performFunction(writer, command, fileName);
-		} catch (IOException ex) {
-			showToUser(String.format(MESSAGE_ERROR_ADDING, fileName));
-		}
+	
+	public static void performFunction(String command, String fileName) throws IOException {
+			COMMAND_TYPE commandType = determineCommandType(getFirstWord(command));
+			switch (commandType) {
+			case ADD:
+				add(fileName,command);
+                break;
+			case DISPLAY:
+				display(fileName);
+				writer = new BufferedWriter(new FileWriter(fileName, true));
+				break;
+			case DELETE:
+				showToUser(delete(fileName, command));
+				writer = new BufferedWriter(new FileWriter(fileName, true));
+				break;
+			case CLEAR:
+				clear(fileName);
+				count =0;
+				writer = new BufferedWriter(new FileWriter(fileName, true));
+				break;
+			case SORT:
+				sort(fileName);
+				writer = new BufferedWriter(new FileWriter(fileName, true));
+				break;
+			case SEARCH:
+				showToUser(search(fileName, sc.next().trim()));
+				break;
+			case INVALID:
+				showToUser(MESSAGE_INVALID);
+				break;
+			case EXIT:
+				writer.close();
+				System.exit(0);
+			default:
+				throw new Error(MESSAGE_UNRECOGNIZE);
+			}
 	}
+
+	
 
 	/*
 	 * This method is used to printout messages to user
@@ -132,52 +189,25 @@ public class TextBuddy {
 		return file;
 	}
 
-	public static void performFunction(BufferedWriter writer, String command, String fileName) throws IOException {
-		int count = 0;
-		while (true) {
-			COMMAND_TYPE commandType = determineCommandType(command);
-			switch (commandType) {
-			case ADD:
-				count = add(fileName, writer, count);
-				break;
-			case DISPLAY:
-				display(fileName);
-				writer = new BufferedWriter(new FileWriter(fileName, true));
-				break;
-			case DELETE:
-				delete(fileName, sc.next().charAt(0));
-				writer = new BufferedWriter(new FileWriter(fileName, true));
-				break;
-			case CLEAR:
-				count = clear(fileName);
-				writer = new BufferedWriter(new FileWriter(fileName, true));
-				break;
-			case SORT:
-				sort(fileName);
-				writer = new BufferedWriter(new FileWriter(fileName, true));
-				break;
-			case SEARCH:
-				showToUser(search(fileName, sc.next().trim()));
-				break;
-			case INVALID:
-				showToUser(MESSAGE_INVALID);
-				break;
-			case EXIT:
-				writer.close();
-				System.exit(0);
-			default:
-				throw new Error(MESSAGE_UNRECOGNIZE);
+	
+	
+	/*Search a word or a line in the file, if contain then return the line
+	* else return "not found";
+	*/
+	public static String search(String fileName, String trimLine) {
+		File inputFile = new File(fileName);
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+			String currentLine;
+			while ((currentLine = reader.readLine()) != null) {
+				if (currentLine.toLowerCase().contains(trimLine.toLowerCase()))
+					return currentLine;
 			}
-			showToUser(MESSAGE_COMMAND);
-			command = sc.next();
-		}
-	}
-
-	public static String search(String fileName, String trim) {
-		String line = "";
-		
-		
-		return line;
+			reader.close();
+		} catch (IOException e) {
+			showToUser(String.format(MESSAGE_ERROR_SORTING, fileName));
+		}	
+		return MESSAGE_NOTFOUND;
 	}
 
 	/*
@@ -185,18 +215,17 @@ public class TextBuddy {
 	 * form [add] [content] Post-con: return the order of the new line add to
 	 * (or line number)
 	 */
-	public static int add(String fileName, BufferedWriter writer, int count) {
+	public static String add(String fileName,String command) {
 		count++;
-		String line = sc.nextLine();
+		String line = removeFirstWord(command);
 		try {
 			writer.write(count + "." + line);
 			writer.newLine();
 			writer.flush();
-			showToUser(String.format(MESSAGE_ADDING, fileName, line.substring(1)));
 		} catch (IOException addEx) {
 			showToUser(String.format(MESSAGE_ERROR_ADDING, fileName));
 		}
-		return count;
+		return String.format(MESSAGE_ADDING, fileName, line);
 	}
 
 	/*
@@ -207,7 +236,6 @@ public class TextBuddy {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(fileName));
 			String line = null;
-
 			if ((line = reader.readLine()) == null) {
 				showToUser(String.format(MESSAGE_EMPTY, fileName));
 			} else {
@@ -220,23 +248,45 @@ public class TextBuddy {
 			showToUser(String.format(MESSAGE_ERROR_READING, fileName));
 		}
 	}
+	
+	public static String unitTest(String fileName) {
+		String stream = "";
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(fileName));
+			String line = null;
+			if ((line = reader.readLine()) == null) {
+				showToUser(String.format(MESSAGE_EMPTY, fileName));
+			} else {
+				do {
+					stream += line;
+				} while ((line = reader.readLine()) != null);
+			}
+			reader.close();
+		} catch (IOException ex) {
+			showToUser(String.format(MESSAGE_ERROR_READING, fileName));
+		}
+		return stream;
+	}
 
 	/*
 	 * This method is to delete a line in the .txt file Pre-con: The file
 	 * contains at least 1 line to delete or else do nothing. Post-con: create a
 	 * new file with the same name as the initial file
 	 */
-	public static void delete(String fileName, char number) {
+	public static String delete(String fileName, String command) {
 		File inputFile = new File(fileName);
 		File tempOutPut = new File("new" + fileName);
+		char lineNumber = removeFirstWord(command).charAt(0);
+		System.out.println("lineNumber: "+ lineNumber);
+		String deletedLine = "";
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(inputFile));
 			BufferedWriter writer = new BufferedWriter(new FileWriter(tempOutPut));
 			String currentLine;
 
 			while ((currentLine = reader.readLine()) != null) {
-				if (currentLine.charAt(0) == number) {
-					showToUser(String.format(MESSAGE_DELETE, fileName, currentLine.substring(3)));
+				if (currentLine.charAt(0) == lineNumber) {
+					deletedLine = String.format(MESSAGE_DELETE, fileName, currentLine.substring(2));
 					continue;
 				}
 				writer.write(currentLine);
@@ -248,6 +298,7 @@ public class TextBuddy {
 		} catch (IOException exDelete) {
 			showToUser(String.format(MESSAGE_ERROR_DELETING, fileName));
 		}
+		return deletedLine;
 	}
 	
 	/* The sort method would arrange lines in alphabetical order. however, there is
@@ -291,7 +342,7 @@ public class TextBuddy {
 	 * contains at least 1 line to delete or else do nothing. Post-con: create a
 	 * new file with the same name as the initial file
 	 */
-	public static int clear(String fileName) {
+	public static void clear(String fileName) {
 		File inputFile = new File(fileName);
 		File tempOutPut = new File("new" + fileName);
 		try {
@@ -301,6 +352,5 @@ public class TextBuddy {
 		} catch (IOException clearEx) {
 			showToUser(String.format(MESSAGE_ERROR_CLEARING, fileName));
 		}
-		return 0;
 	}
 }
