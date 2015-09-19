@@ -211,12 +211,12 @@ public class TextBuddy {
 			String currentLine;
 			int count = 0;
 			while ((currentLine = reader.readLine()) != null) {
-				array[count++]= currentLine.substring(3);
+				array[count++]= currentLine.substring(2);
 				}
 			Arrays.sort(array);
 			for(int i = 0; i< count; i++){
 				int n = i+1;
-				writer.write(""+ n+". " + array[i]);
+				writer.write(""+ n+"." + array[i]);
 				writer.newLine();
 			}
 			writer.close();
